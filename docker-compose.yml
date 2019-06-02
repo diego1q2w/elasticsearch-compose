@@ -46,10 +46,9 @@ services:
         target: /usr/share/elasticsearch/data
     networks:
       - elastic
-      - ingress
     ports:
-      - 9200:9200
       - 9300:9300
+
   elasticsearch2:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.1.1
     container_name: elasticsearch2
@@ -97,9 +96,7 @@ services:
         target: /usr/share/elasticsearch/data
     networks:
       - elastic
-      - ingress
-    ports:
-      - 9201:9200
+      
   elasticsearch3:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.1.1
     container_name: elasticsearch3
@@ -147,17 +144,13 @@ services:
         target: /usr/share/elasticsearch/data
     networks:
       - elastic
-      - ingress
-    ports:
-      - 9202:9200
+
   kibana:
     image: docker.elastic.co/kibana/kibana:7.1.1
     container_name: kibana
     environment:
       SERVER_NAME: localhost
-      ELASTICSEARCH_URL: http://elasticsearch1:9200/
-    ports:
-      - 5601:5601
+      ELASTICSEARCH_URL: http://nginx/elasticsearch
     volumes:
       - type: volume
         source: logs
@@ -188,7 +181,6 @@ services:
         window: 120s
     networks:
       - elastic
-      - ingress
 
   nginx:
     image: nginx:latest
@@ -200,7 +192,7 @@ services:
     ulimits:
       nproc: 65535
     networks:
-      - ingress
+      - elastic
 
 volumes:
   esdata1:
@@ -210,4 +202,3 @@ volumes:
 
 networks:
   elastic:
-  ingress:
